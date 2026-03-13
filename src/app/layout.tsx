@@ -8,11 +8,12 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Johan Delgado - Portfolio",
   description: "Portfolio profesional de Johan Delgado, Ingeniero de Software",
+  viewport: "width=device-width, initial-scale=1",
   other: {
     "next-size-adjust": "100%",
   },
 };
-
+//holaa
 export default function RootLayout({
   children,
 }: {
