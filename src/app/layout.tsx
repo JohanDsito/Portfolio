@@ -8,6 +8,9 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Johan Delgado - Portfolio",
   description: "Portfolio profesional de Johan Delgado, Ingeniero de Software",
+  other: {
+    "next-size-adjust": "100%",
+  },
 };
 
 export default function RootLayout({
