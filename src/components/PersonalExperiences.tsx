@@ -1,106 +1,113 @@
 'use client';
 
 import Image from 'next/image';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import { Autoplay, Navigation, Pagination } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { useEffect, useRef, useState } from 'react';
 
-interface ExperienceImage {
-  src: string;
-  alt: string;
-}
-
-const experiences: ExperienceImage[] = [
-  {
-    src: '/galeras1.png',
-    alt: 'Performance musical en escenario',
-  },
-  {
-    src: '/galeras2.png',
-    alt: 'Tocando batería en evento',
-  },
-  {
-    src: '/raices.png',
-    alt: 'Grupo musical en evento',
-  },
-  {
-    src: '/runas.jpg',
-    alt: 'Logo Capital en evento',
-  },
+const photos = [
+  { src: '/galeras1.png', alt: 'Johan en escenario con su banda',   rotate: -2.5 },
+  { src: '/galeras2.png', alt: 'Johan tocando batería en evento',    rotate: 1.5  },
+  { src: '/raices.png',   alt: 'Grupo musical en evento Raíces',     rotate: -1   },
+  { src: '/runas.jpg',    alt: 'Logo Capital en evento Runas',       rotate: 2    },
 ];
 
+function useReveal() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  return { ref, visible };
+}
+
 export function PersonalExperiences() {
+  const { ref: sectionRef, visible: sectionVisible } = useReveal();
+  const { ref: textRef, visible: textVisible } = useReveal();
+
   return (
-    <section id="experiencias" className="relative py-16 px-4 bg-sky-50 dark:bg-slate-800 -mt-20">
-      <section className="relative bg-teal-700 dark:bg-teal-900 py-16 px-4 overflow-hidden -mt-52">
-        <header className="max-w-7xl mx-auto mb-8">
-          <h2 className="text-4xl font-bold text-center text-white dark:text-teal-300">
-            EXPERIENCIAS PERSONALES
-          </h2>
-        </header>
-
-        <section className="max-w-4xl mx-auto">
-          <article className="relative">
-            <Swiper
-              modules={[Navigation, Pagination, Autoplay]}
-              navigation
-              pagination={{ clickable: true }}
-              autoplay={{ delay: 3000 }}
-              loop={true}
-              spaceBetween={16}
-              breakpoints={{
-                480: { slidesPerView: 1 },
-                768: { slidesPerView: 2 },
-                1024: { slidesPerView: 3 },
-                1280: { slidesPerView: 4 },
-              }}
-              className="mb-8"
-            >
-              {experiences.map((exp, index) => (
-                <SwiperSlide key={index}>
-                  <figure className="relative aspect-[4/3] overflow-hidden rounded-lg border-4 border-white/10">
-                    <Image
-                      src={exp.src}
-                      alt={exp.alt}
-                      fill
-                      sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 25vw"
-                      className="object-cover"
-                    />
-                  </figure>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </article>
-
-          <article className="max-w-3xl mx-auto text-center">
-            <p className="text-white/90 dark:text-white/80 leading-relaxed">
-              En mi vida personal la música ha sido la encargada de llevarme por
-              un camino distinto en el cual puedo expresarme libremente y crear a
-              base de ritmos y melodías distintos tipos de pensamientos los cuales
-              no pueden ser simplemente expresados con palabras, por lo cual es mi
-              manera de expresarme y sentirme en un lugar seguro, mas allá de un
-              solo enfoque en el mundo del software, salir de el no esta mal y es
-              aquello lo que nos hace personas.
-            </p>
-          </article>
-        </section>
-
-        <footer className="absolute -bottom-32 left-0 right-0 h-48 md:h-56 lg:h-64">
-          <svg
-            viewBox="0 0 1440 320"
-            className="absolute bottom-0 w-full h-full"
-            preserveAspectRatio="none"
+    <section
+      id="experiencias"
+      className="py-20 md:py-28 overflow-hidden"
+      style={{
+        background:
+          'linear-gradient(160deg, oklch(0.36 0.11 183) 0%, oklch(0.28 0.09 183) 100%)',
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          ref={sectionRef}
+          className={`reveal ${sectionVisible ? 'visible' : ''} mb-12`}
+        >
+          <h2
+            className="font-display font-extrabold text-white"
+            style={{ fontSize: 'clamp(2rem, 4vw, 2.75rem)', letterSpacing: '-0.02em' }}
           >
-            <path
-              fill="#f0f9ff"
-              fillOpacity="1"
-              d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,112C672,96,768,96,864,112C960,128,1056,160,1152,160C1248,160,1344,128,1392,112L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-            ></path>
-          </svg>
-        </footer>
-      </section>
+            Más allá del código
+          </h2>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Photo grid — scattered look */}
+          <div className="relative grid grid-cols-2 gap-4 py-4">
+            {photos.map((photo, i) => (
+              <div
+                key={i}
+                className={`reveal ${sectionVisible ? 'visible' : ''} relative overflow-hidden rounded-xl`}
+                style={{
+                  aspectRatio: '4/3',
+                  transform: `rotate(${photo.rotate}deg)`,
+                  boxShadow:
+                    '0 4px 12px oklch(0 0 0 / 0.35), 0 1px 3px oklch(0 0 0 / 0.25)',
+                  transitionDelay: `${i * 70}ms`,
+                  transition: 'transform 0.4s ease, box-shadow 0.4s ease',
+                }}
+                onMouseEnter={e => {
+                  (e.currentTarget as HTMLElement).style.transform = 'rotate(0deg) scale(1.03)';
+                  (e.currentTarget as HTMLElement).style.boxShadow =
+                    '0 8px 24px oklch(0 0 0 / 0.45), 0 2px 6px oklch(0 0 0 / 0.3)';
+                }}
+                onMouseLeave={e => {
+                  (e.currentTarget as HTMLElement).style.transform = `rotate(${photo.rotate}deg)`;
+                  (e.currentTarget as HTMLElement).style.boxShadow =
+                    '0 4px 12px oklch(0 0 0 / 0.35), 0 1px 3px oklch(0 0 0 / 0.25)';
+                }}
+              >
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  fill
+                  sizes="(max-width: 768px) 50vw, 28vw"
+                  className="object-cover"
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Text */}
+          <div
+            ref={textRef}
+            className={`reveal ${textVisible ? 'visible' : ''}`}
+            style={{ transitionDelay: '150ms' }}
+          >
+            <p className="font-body text-white/85 text-lg leading-relaxed mb-5">
+              La música me ha llevado por un camino distinto donde puedo
+              expresarme libremente. A base de ritmos y melodías construyo
+              pensamientos que no pueden expresarse solo con palabras.
+            </p>
+            <p className="font-body text-white/60 text-base leading-relaxed">
+              Salir del mundo del software no está mal. Al contrario, es
+              precisamente eso lo que nos hace personas más completas. La batería
+              es mi lugar seguro, el contrapunto al teclado.
+            </p>
+          </div>
+        </div>
+      </div>
     </section>
   );
 }
