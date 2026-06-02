@@ -163,7 +163,7 @@ export function ContactSection() {
             {/* Quote */}
             <div className="px-6 py-5 border-b border-surface-border dark:border-surface-border">
               <p className="font-body text-ink-muted dark:text-ink-muted text-sm italic leading-relaxed">
-                "Programar es componer sinfonías digitales: cada función una nota, cada algoritmo una melodía que transforma el mundo."
+                &ldquo;Programar es componer sinfonías digitales: cada función una nota, cada algoritmo una melodía que transforma el mundo.&rdquo;
               </p>
             </div>
 
